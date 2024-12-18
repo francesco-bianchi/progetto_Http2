@@ -51,17 +51,16 @@ public class GestoreServer extends Thread {
                     if(resource.endsWith("/")){ // gestisco mandandolo alla index se non è stato inserito nulla dopo il get
                         resource = resource + "/index.html";
                     }
-                    else if(!resource.endsWith("/") && (resource.split("\\.")).length == 1){
+
+                    File file = new File("htdocs" + resource); // trovo il file
+
+                    if(file.isDirectory()){
                         out.writeBytes("HTTP/1.1 301 Moved Permanently\n");
                         out.writeBytes("Content-Length: 0\n");
                         out.writeBytes("Location: " + resource + "/\n");
                         out.writeBytes("\r\n");
                     }
-                    
-                    File file = new File("htdocs" + resource); // trovo il file
-                    
-
-                    if (file.exists()) {
+                    else if (file.exists()) {
                         out.writeBytes("HTTP/1.1 200 OK\r\n");
                         out.writeBytes("Content-Length: " + file.length() + "\r\n");
                         out.writeBytes("Content-Type: " + getContentType(file) + "\r\n");
